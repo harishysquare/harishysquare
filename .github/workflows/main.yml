@@ -20,11 +20,15 @@ jobs:
       
       - name: Build Docker Image
         run: |
-          docker build -t demo-py-app .
+          docker build -t demomantis.azurecr.io/demo-py-app:latest .
+
+      - name: Push Docker Image to ACR
+        run: |
           echo ${{ secrets.AZURE_CLIENT_SECRET }} | docker login demomantis.azurecr.io --username ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
+          docker push demomantis.azurecr.io/demo-py-app:latest
 
       - name: Deploy to AKS
         run: | 
           az aks get-credentials --resource-group poc-ysq-mantis --name MyAksCluster
-          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app
+          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app:latest
           kubectl rollout status deployment/demo-py-app
