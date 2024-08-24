@@ -17,6 +17,9 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login To ACR
+        run: az acr login --name demomantis
       
       - name: Build Docker Image
         run: |
