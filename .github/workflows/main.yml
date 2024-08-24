@@ -24,7 +24,6 @@ jobs:
 
       - name: Push Docker Image to ACR
         run: |
-          echo ${{ secrets.AZURE_CLIENT_SECRET }} | docker login demomantis.azurecr.io --username ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
           docker push demomantis.azurecr.io/demo-py-app:latest
 
       - name: Deploy to AKS
