@@ -11,20 +11,26 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login To ACR
+        run: az acr login --name demomantis
       
       - name: Build Docker Image
         run: |
-          docker build -t demo-py-app .
-          echo ${{ secrets.AZURE_CLIENT_SECRET }} | docker login demomantis.azurecr.io --username ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
+          docker build -t demomantis.azurecr.io/demo-py-app:latest .
 
-      - name: Deploy to AKS
+      - name: Push Docker Image to ACR
+        run: |
+          docker push demomantis.azurecr.io/demo-py-app:latest
+
+      - name: deploy to AKS
         run: | 
-          az aks get-credentials --resource-group poc-ysq-mantis --name MyAksCluster
-          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app
+          az aks get-credentials --resource-group poc-ysq-datamantis --name MyAksCluster
+          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app:latest
           kubectl rollout status deployment/demo-py-app
