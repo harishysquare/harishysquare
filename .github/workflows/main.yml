@@ -29,6 +29,10 @@ jobs:
         run: |
           docker push demomantis.azurecr.io/demo-py-app:latest
 
+      - name: deploy to AKS
+        run: | 
+          az aks get-credentials --resource-group poc-ysq-datamantis --name MyAksCluster
+
 #      - name: Deploy to AKS
 #        run: | 
 #          az aks get-credentials --resource-group poc-ysq-datamantis --name MyAksCluster
