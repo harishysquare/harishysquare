@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deployment
+  labels:
+    app: demo-py-app
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: demo-py-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: demo-py-app
+        version: green
+    spec:
+      containers:
+      - name: demo-py-app
+        image: demomantis.azurecr.io/demo-py-app:latest
+        ports:
+        - containerPort: 8080
