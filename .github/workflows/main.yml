@@ -29,8 +29,18 @@ jobs:
         run: |
           docker push demomantis.azurecr.io/demo-py-app:latest
 
-      - name: deploy to AKS
-        run: | 
+      - name: Deploy "Green" version to AKS
+        run: |
           az aks get-credentials --resource-group poc-ysq-datamantis --name MyAksCluster
-          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app:latest
-          kubectl rollout status deployment/demo-py-app
+          kubectl apply -f k8s/green.deployment.yml
+          kubectl apply -f k8s/green.service.yml
+
+      - name: Monitor Rollout Status
+        run: |
+          kubectl rollout status deployment/green-deployment
+
+#      - name: deploy to AKS
+#        run: | 
+#          az aks get-credentials --resource-group poc-ysq-datamantis --name MyAksCluster
+#          kubectl set image deployment/demo-py-app demo-py-app=demomantis.azurecr.io/demo-py-app:latest
+#          kubectl rollout status deployment/demo-py-app
